@@ -24,7 +24,7 @@ export class Server {
 
   private Listen() {
     this.App.listen(this.Port, () => {
-      console.log(`Server running on port${this.Port}`)
+      console.log(`Server running on port: ${this.Port}`)
     })
   }
 }

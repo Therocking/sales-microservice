@@ -1,8 +1,10 @@
 import { Router } from "express";
+import { check } from "express-validator";
 import { SalesRepositoryImpl } from "../../infrastructure/sales.repositoryIml";
 import { SalesService } from "../services/sales.service";
 import { SalesControllers } from "../controllers/sales.controller";
-
+import { ShowExpressValidatorErrors } from "../middlewares/showValidatorErrors.middleware";
+import { ValidateFields } from "../helpers/validateFields.helper";
 
 export class SalesRoutes {
   public static get Routes(): Router {
@@ -12,10 +14,36 @@ export class SalesRoutes {
     const service = new SalesService(repository)
     const controller = new SalesControllers(service)
 
-    router.post("/", controller.Create)
-    router.get("/", controller.GetAll)
-    router.put("/:id", controller.Update)
-    router.delete("/:id", controller.Delete)
+    router.post("/",[
+      check("clientId", "Falta el id del client").notEmpty(),
+      ShowExpressValidatorErrors.validFields,
+      check("productId", "Falta el id del producto").isString().notEmpty(),
+      ShowExpressValidatorErrors.validFields,
+      check("amount", "Falta la cantidad del producto").isInt().notEmpty(),
+      ShowExpressValidatorErrors.validFields,
+      check("total", "Falta el total de la venta").notEmpty(),
+      ShowExpressValidatorErrors.validFields,
+      check("payment", "Falta la forma de pago").custom(ValidateFields.IsValidPayment),
+      ShowExpressValidatorErrors.validFields,
+      check("price", "Falta el precio").isString().notEmpty(),
+      ShowExpressValidatorErrors.validFields
+    ],controller.Create)
+
+    router.get("/",controller.GetAll)
+
+    router.put("/:id",[
+      check("id", "Falta el id.").notEmpty(),
+      ShowExpressValidatorErrors.validFields,
+      check("id", "Formato del id invalido.").isMongoId(),
+      ShowExpressValidatorErrors.validFields
+    ],controller.Update)
+
+    router.delete("/:id",[
+      check("id", "Falta el id.").notEmpty(),
+      ShowExpressValidatorErrors.validFields,
+      check("id", "Formato del id invalido.").isMongoId(),
+      ShowExpressValidatorErrors.validFields
+    ],controller.Delete)
 
     return router
   }
