@@ -13,18 +13,23 @@ export class SalesRepositoryImpl implements ISaleRepository {
   }
 
   public async GetAll(): Promise<ISale[]> {
-     const sales = await Sale.find()
+     const sales = await Sale.find({active: true})
      return sales
   }
 
-  public async Update(updateDto: IUpdateSale): Promise<ISale> {
-      const {id, ...rest} = updateDto
-      const sale = await Sale.findByIdAndUpdate(id, rest)
-      return sale!
+  public async GetById(id: string): Promise<ISale | null> {
+     const sale = await Sale.findById(id);
+      return sale
   }
 
-  public async Delete(id: string): Promise<ISale> {
-      const sale = await Sale.findByIdAndDelete(id)
+  public async Update(updateDto: IUpdateSale): Promise<ISale | null> {
+      const {id, ...rest} = updateDto
+      const sale = await Sale.findByIdAndUpdate(id, {amount: rest.amount}, {new: true})
+      return sale
+  }
+
+  public async Delete(id: string): Promise<ISale | null> {
+      const sale = await Sale.findByIdAndUpdate(id, {active: false}, {new: true})
       return sale!
   }
 }

@@ -7,6 +7,7 @@ export interface ISale {
   total: number
   payment: string
   saleDate: Date
+  active: boolean
 }
 
 export interface ICreateSale {

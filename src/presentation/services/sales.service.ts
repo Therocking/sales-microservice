@@ -30,10 +30,19 @@ export class SalesService implements ISaleService {
     }
   }
 
+  public async GetById(id: string): Promise<ISale> {
+    try {
+      const sale = await this._repository.GetById(id)
+      return sale!
+    } catch (err) {
+      throw CustomHttpErrors.InternalError("Error en el servidor.")
+    }
+  }
+
   public async Update(updateDto: IUpdateSale): Promise<ISale> {
     try {
       const sale = await this._repository.Update(updateDto)
-      return sale
+      return sale!
     } catch (err) {
       throw CustomHttpErrors.InternalError("Error en el servidor.")
     }
@@ -42,7 +51,7 @@ export class SalesService implements ISaleService {
   public async Delete(id: string): Promise<ISale> {
     try {
       const sale = await this._repository.Delete(id)
-      return sale
+      return sale!
     } catch (err) {
       throw CustomHttpErrors.InternalError("Error en el servidor.")
     }

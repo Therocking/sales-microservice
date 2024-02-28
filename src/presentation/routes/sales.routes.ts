@@ -14,6 +14,8 @@ export class SalesRoutes {
     const service = new SalesService(repository)
     const controller = new SalesControllers(service)
 
+    const validator = new ValidateFields()
+
     router.post("/",[
       check("clientId", "Falta el id del client").notEmpty(),
       ShowExpressValidatorErrors.validFields,
@@ -23,9 +25,9 @@ export class SalesRoutes {
       ShowExpressValidatorErrors.validFields,
       check("total", "Falta el total de la venta").notEmpty(),
       ShowExpressValidatorErrors.validFields,
-      check("payment", "Falta la forma de pago").custom(ValidateFields.IsValidPayment),
+      check("payment").custom(validator.IsValidPayment),
       ShowExpressValidatorErrors.validFields,
-      check("price", "Falta el precio").isString().notEmpty(),
+      check("price", "Falta el precio").isFloat().notEmpty(),
       ShowExpressValidatorErrors.validFields
     ],controller.Create)
 
@@ -35,6 +37,8 @@ export class SalesRoutes {
       check("id", "Falta el id.").notEmpty(),
       ShowExpressValidatorErrors.validFields,
       check("id", "Formato del id invalido.").isMongoId(),
+      ShowExpressValidatorErrors.validFields,
+      check("id").custom(validator.ExistSale),
       ShowExpressValidatorErrors.validFields
     ],controller.Update)
 
@@ -42,6 +46,8 @@ export class SalesRoutes {
       check("id", "Falta el id.").notEmpty(),
       ShowExpressValidatorErrors.validFields,
       check("id", "Formato del id invalido.").isMongoId(),
+      ShowExpressValidatorErrors.validFields,
+      check("id").custom(validator.ExistSale),
       ShowExpressValidatorErrors.validFields
     ],controller.Delete)
 

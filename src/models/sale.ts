@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
 import { ISale } from "../interfaces/sale.interface";
 
-
 const SaleSchema = new Schema<ISale>({
   clientId: {type: String, required: true},
   productId: {type: String, required: true},
@@ -9,7 +8,8 @@ const SaleSchema = new Schema<ISale>({
   price: {type: Number, required: true},
   total: {type: Number, required: true},
   payment: {type: String, required: true, enum: ["Card", "Cash"]},
-  saleDate: {type: Date, default: Date.now()}
+  saleDate: {type: Date, default: Date.now()},
+  active: {type: Boolean, default: true}
 })
 
 SaleSchema.methods.toJSON = function() {

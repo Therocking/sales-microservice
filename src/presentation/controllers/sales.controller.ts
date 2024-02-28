@@ -23,7 +23,7 @@ export class SalesControllers {
   }
 
   public Update = (req: Request, res: Response) => {
-    this._service.Update(req.body)
+    this._service.Update({...req.body, id: req.params.id})
       .then(sales => res.json(sales))
       .catch(err => CustomHandleError.HandleError(err, res))
   }
